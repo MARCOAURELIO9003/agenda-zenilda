@@ -1,70 +1,35 @@
 
-
-html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda Zenilda - Lages</title>
+<title>Agenda Zenilda</title>
 <style>
-body { background: #fff0f5; font-family: Arial; text-align: center; padding: 20px; }
-.img-topo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid #ff69b4; object-fit: cover; margin: 20px auto; display: block; background: white; }
-h1 { color: #ff69b4; font-size: 32px; font-weight: bold; }
-label { font-size: 22px; display: block; margin: 15px; color: #333; }
-.total { font-size: 28px; color: #ff1493; font-weight: bold; margin: 20px; }
-input, select { font-size: 20px; padding: 12px; border-radius: 10px; border: 2px solid #ffb6c1; width: 90%; max-width: 300px; margin: 10px auto; display: block; }
-button { background: #20b2aa; color: white; font-size: 22px; padding: 15px 30px; border: none; border-radius: 30px; margin-top: 20px; font-weight: bold; cursor: pointer; }
+body{background:#fff0f5;font-family:Arial;text-align:center;padding:15px}
+.foto{width:300px;display:block;margin:20px auto;background:white;border-radius:20px}
+h1{color:#ff1493;font-size:45px;font-weight:bold}
+label{font-size:30px;display:block;margin:20px;font-weight:bold}
+.total{font-size:38px;color:#d81b60;font-weight:bold;margin:25px;background:white;padding:15px;border-radius:15px}
+input,select{font-size:26px;padding:18px;border-radius:15px;border:3px solid #ffb6c1;width:90%;max-width:400px;margin:12px auto;display:block}
+button{background:#20b2aa;color:white;font-size:28px;padding:22px 40px;border:none;border-radius:40px;margin-top:25px;font-weight:bold}
 </style>
 </head>
 <body>
-
-<img class="img-topo" src="https://cdn-icons-png.flaticon.com/512/194/194938.png" alt="Zenilda">
-
-<h1>corte e progressiva</h1>
-
-<label><input type="checkbox" id="corte" onchange="calc()"> corte 80</label>
-<label><input type="checkbox" id="prog" onchange="calc()"> progressiva 180</label>
-
+<img class="foto" src="75-751115_gorgeus-clipart-womens-hair-imagens-cabeleireiro-png.png">
+<h1>Agenda Zenilda</h1>
+<label><input type="checkbox" id="corte" onchange="calc()"> Corte R$80</label>
+<label><input type="checkbox" id="prog" onchange="calc()"> Progressiva R$180</label>
 <div class="total" id="total">Total: R$ 0</div>
-
-<h1 style="font-size:24px;">Escolha o dia:</h1>
 <input type="date" id="data">
-
-<h1 style="font-size:24px;">Escolha o horário:</h1>
-<select id="hora">
-<option>Selecione</option>
-<option>08:00</option>
-<option>09:00</option>
-<option>10:00</option>
-<option>13:00</option>
-<option>14:00</option>
-<option>15:00</option>
-</select>
-
-<button onclick="zap()">Agendar no whatsapp</button>
-
-<p style="margin-top:40px; font-size:14px;">Feito por Marco Aurélio - Lages/SC</p>
-
+<select id="hora"><option>Escolha horário</option><option>08:00</option><option>09:00</option><option>10:00</option><option>14:00</option><option>15:00</option></select>
+<button onclick="zap()">Agendar no WhatsApp</button>
 <script>
-function calc(){
-let t=0;
-if(document.getElementById('corte').checked) t+=80;
-if(document.getElementById('prog').checked) t+=180;
-document.getElementById('total').innerText='Total: R$ '+t;
-}
-function zap(){
-let s='';
-if(document.getElementById('corte').checked) s+=' corte';
-if(document.getElementById('prog').checked) s+=' progressiva';
-let d=document.getElementById('data').value;
-let h=document.getElementById('hora').value;
-let total=document.getElementById('total').innerText;
-let msg=`Olá Zenilda! Quero agendar:${s} - ${total} - Dia: ${d} - Hora: ${h}`;
-window.open('https://wa.me/5549999999999?text='+encodeURIComponent(msg));
-}
+function calc(){let t=0;if(document.getElementById('corte').checked)t+=80;if(document.getElementById('prog').checked)t+=180;document.getElementById('total').innerText='Total: R$ '+t;}
+function zap(){let s='';if(document.getElementById('corte').checked)s+=' Corte';if(document.getElementById('prog').checked)s+=' Progressiva';let m=`Olá Zenilda! Quero agendar:${s} - ${document.getElementById('total').innerText} Dia:${document.getElementById('data').value} Hora:${document.getElementById('hora').value}`;window.open('https://wa.me/5549999999999?text='+encodeURIComponent(m));}
 </script>
 </body>
 </html>
+
                
     
