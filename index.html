@@ -1,84 +1,70 @@
+
+
+html
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>zenilda</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <link href="estilo.css" rel="stylesheet">
-  </head>
-  
-  
-    
-  
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agenda Zenilda - Lages</title>
+<style>
+body { background: #fff0f5; font-family: Arial; text-align: center; padding: 20px; }
+.img-topo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid #ff69b4; object-fit: cover; margin: 20px auto; display: block; background: white; }
+h1 { color: #ff69b4; font-size: 32px; font-weight: bold; }
+label { font-size: 22px; display: block; margin: 15px; color: #333; }
+.total { font-size: 28px; color: #ff1493; font-weight: bold; margin: 20px; }
+input, select { font-size: 20px; padding: 12px; border-radius: 10px; border: 2px solid #ffb6c1; width: 90%; max-width: 300px; margin: 10px auto; display: block; }
+button { background: #20b2aa; color: white; font-size: 22px; padding: 15px 30px; border: none; border-radius: 30px; margin-top: 20px; font-weight: bold; cursor: pointer; }
+</style>
+</head>
+<body>
 
-    
-  
-    <body>
-      <h1>cabeleireira da zenilda</h1>
-      <img src=https://i.postimg.cc/bsbhy4sp/atraente-cabeleireira-feliz-menina-com-pente-e-secador-de-cabelo-retrato(1).jpg" class="foto">
-      <h5>corte e progressiva</h5>
-    <ul>
-  <li><label><input type="checkbox" id="corte" value="80" onchange="soma()"> corte 80</label></li>
-  <li><label><input type="checkbox" id="prog" value="180" onchange="soma()"> progressiva 180</label></li>
-</ul>
-<p id="total" style="font-weight:bold; color:#e91e63; margin-top:10px;">Total: R$ 0</p>
-<div style="margin-top:15px; background:#fff0f5; padding:10px; border-radius:10px;">
-  <p style="font-weight:bold; color:#e91e63; margin:0 0 5px 0;">Escolha o dia:</p>
-  <input type="date" id="data" style="width:100%; padding:8px; border-radius:5px; border:1px solid #e91e63;">
-  
-  <p style="font-weight:bold; color:#e91e63; margin:10px 0 5px 0;">Escolha o horário:</p>
-  <select id="hora" style="width:100%; padding:8px; border-radius:5px; border:1px solid #e91e63;">
-    <option value="">Selecione</option>
-    <option value="08:00">08:00</option>
-    <option value="09:00">09:00</option>
-    <option value="10:00">10:00</option>
-    <option value="13:00">13:00</option>
-    <option value="14:00">14:00</option>
-    <option value="15:00">15:00</option>
-    <option value="16:00">16:00</option>
-    <option value="17:00">17:00</option>
-  </select>
-  <a id="zap" class="botao" href="https://wa.me/5549999713384" target="_blank" style="display:block; text-align:center; background:#25D366; color:white; padding:12px; border-radius:20px; text-decoration:none; font-weight:bold; margin-top:20px;">
-  Agendar no whatsapp
-</a>
+<img class="img-topo" src="https://cdn-icons-png.flaticon.com/512/194/194938.png" alt="Zenilda">
+
+<h1>corte e progressiva</h1>
+
+<label><input type="checkbox" id="corte" onchange="calc()"> corte 80</label>
+<label><input type="checkbox" id="prog" onchange="calc()"> progressiva 180</label>
+
+<div class="total" id="total">Total: R$ 0</div>
+
+<h1 style="font-size:24px;">Escolha o dia:</h1>
+<input type="date" id="data">
+
+<h1 style="font-size:24px;">Escolha o horário:</h1>
+<select id="hora">
+<option>Selecione</option>
+<option>08:00</option>
+<option>09:00</option>
+<option>10:00</option>
+<option>13:00</option>
+<option>14:00</option>
+<option>15:00</option>
+</select>
+
+<button onclick="zap()">Agendar no whatsapp</button>
+
+<p style="margin-top:40px; font-size:14px;">Feito por Marco Aurélio - Lages/SC</p>
 
 <script>
-function soma(){
-  let t = 0;
-  let msg = "Oi Zenilda quero agendar: ";
-  if(document.getElementById('corte').checked){ t += 80; msg += "corte "; }
-  if(document.getElementById('prog').checked){ t += 180; msg += "progressiva "; }
-  document.getElementById('total').innerText = "Total: R$ " + t;
-  msg += " - Total R$ " + t;
-  let data = document.getElementById('data').value;
-  let hora = document.getElementById('hora').value;
-  if(data){ msg += " - Dia: " + data.split('-').reverse().join('/'); }
-  if(hora){ msg += " as " + hora; }
-  document.getElementById('zap').href = "https://wa.me/5549999713384?text=" + encodeURIComponent(msg);
+function calc(){
+let t=0;
+if(document.getElementById('corte').checked) t+=80;
+if(document.getElementById('prog').checked) t+=180;
+document.getElementById('total').innerText='Total: R$ '+t;
 }
-document.getElementById('data').addEventListener('change', soma);
-document.getElementById('hora').addEventListener('change', soma);
-</script>
-</div>
-<script>
-function soma(){
-  let t = 0;
-  let msg = "Oi Zenilda quero agendar: ";
-  if(document.getElementById('corte').checked){ t += 80; msg += "corte "; }
-  if(document.getElementById('prog').checked){ t += 180; msg += "progressiva "; }
-  document.getElementById('total').innerText = "Total: R$ " + t;
-  msg += " - Total R$ " + t;
-  
-  let data = document.getElementById('data').value;
-  let hora = document.getElementById('hora').value;
-  if(data){ msg += " - Dia: " + data.split('-').reverse().join('/'); }
-  if(hora){ msg += " as " + hora; }
-  
-  document.getElementById('zap').href = "https://wa.me/5549999713384?text=" + encodeURIComponent(msg);
+function zap(){
+let s='';
+if(document.getElementById('corte').checked) s+=' corte';
+if(document.getElementById('prog').checked) s+=' progressiva';
+let d=document.getElementById('data').value;
+let h=document.getElementById('hora').value;
+let total=document.getElementById('total').innerText;
+let msg=`Olá Zenilda! Quero agendar:${s} - ${total} - Dia: ${d} - Hora: ${h}`;
+window.open('https://wa.me/5549999999999?text='+encodeURIComponent(msg));
 }
-document.getElementById('data').addEventListener('change', soma);
-document.getElementById('hora').addEventListener('change', soma);
 </script>
-    </body>
+</body>
 </html>
                
     
