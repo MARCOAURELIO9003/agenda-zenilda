@@ -5,76 +5,76 @@ html
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda Zenilda - com Banco</title>
+<title>Zenilda - Cabeleireira</title>
 <style>
-body{background:#fff0f5;font-family:Arial;text-align:center;padding:15px}
-.foto{width:280px;display:block;margin:15px auto;background:white;border-radius:20px;padding:10px}
-h1{color:#ff1493;font-size:50px;margin:10px}
-label{font-size:32px;display:block;margin:25px;font-weight:bold;background:white;padding:15px;border-radius:15px}
-input[type="checkbox"]{transform:scale(2.5);margin-right:20px}
-.total{font-size:40px;color:#d81b60;font-weight:bold;margin:25px;background:white;padding:20px;border-radius:15px}
-input,select{font-size:26px;padding:18px;border-radius:15px;border:3px solid #ffb6c1;width:90%;max-width:400px;margin:12px auto;display:block}
-button{background:#20b2aa;color:white;font-size:28px;padding:20px 35px;border:none;border-radius:40px;margin:10px;font-weight:bold}
-.banco{background:white;margin-top:30px;padding:20px;border-radius:15px;text-align:left}
-.banco h2{color:#ff1493;font-size:32px;text-align:center}
-.item{border-bottom:2px solid #ffc0cb;padding:12px;font-size:22px}
+body{font-family:Arial;background:#fff0f5;margin:0;padding:20px}
+h1{color:#d63384;text-align:center}
+.card{background:white;padding:15px;border-radius:15px;box-shadow:0 2px 10px #ccc;max-width:400px;margin:20px auto}
+input,select{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
+button{background:#d63384;color:white;border:none;padding:12px;width:100%;border-radius:8px;font-size:16px;cursor:pointer;margin-top:10px}
+button:hover{background:#b02a6f}
+.lista{max-width:400px;margin:20px auto;background:white;padding:15px;border-radius:15px}
+.item{border-bottom:1px solid #eee;padding:10px 0;display:flex;justify-content:space-between}
 </style>
 </head>
 <body>
-<img class="foto" src="75-751115_gorgeus-clipart-womens-hair-imagens-cabeleireiro-png.png">
-<h1>Agenda Zenilda</h1>
-
-<label><input type="checkbox" id="corte" onchange="calc()"> Corte R$80</label>
-<label><input type="checkbox" id="prog" onchange="calc()"> Progressiva R$180</label>
-<div class="total" id="total">Total: R$ 0</div>
-
-<input type="text" id="nome" placeholder="Nome da cliente">
-<input type="date" id="data">
-<select id="hora"><option>Escolha horário</option><option>08:00</option><option>09:00</option><option>10:00</option><option>14:00</option><option>15:00</option><option>16:00</option></select>
-
-<button onclick="salvar()">Salvar no Banco e WhatsApp</button>
-
-<div class="banco">
-<h2>📒 Banco - Agendamentos Salvos</h2>
-<div id="lista">Nenhum agendamento ainda</div>
-<button onclick="limparBanco()" style="background:#ff4444">Apagar tudo do banco</button>
+<h1>💇‍♀️ Zenilda Cabeleireira</h1>
+<div class="card">
+<h3>Novo Agendamento</h3>
+<input id="nome" placeholder="Nome da cliente">
+<select id="servico">
+<option>Corte - R$ 30</option>
+<option>Escova - R$ 25</option>
+<option>Coloração - R$ 80</option>
+<option>Luzes - R$ 120</option>
+</select>
+<input id="data" type="date">
+<input id="hora" type="time">
+<button onclick="salvar()">Salvar no Banco na NUVEM ☁️</button>
+<p id="msg"></p>
+</div>
+<div class="lista">
+<h3>📋 Agendamentos salvos:</h3>
+<div id="lista">Carregando...</div>
 </div>
 
-<script>
-function calc(){let t=0;if(corte.checked)t+=80;if(prog.checked)t+=180;total.innerText='Total: R$ '+t;return t;}
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 
-function salvar(){
-let nome=document.getElementById('nome').value;
-if(!nome){alert('Escreve o nome da cliente!');return;}
-let dados={
-nome:nome,
-servico:(corte.checked?' Corte ':'')+(prog.checked?' Progressiva':''),
-total:document.getElementById('total').innerText,
-data:document.getElementById('data').value,
-hora:document.getElementById('hora').value
+const firebaseConfig = {
+  apiKey: "AIzaSyDMHr-t4pRCV9meCF5LvFVfqhNv7LvdSdU",
+  authDomain: "agenda-zenilda.firebaseapp.com",
+  databaseURL: "https://agenda-zenilda-default-rtdb.firebaseio.com",
+  projectId: "agenda-zenilda",
+  storageBucket: "agenda-zenilda.firebasestorage.app",
+  messagingSenderId: "831436778217",
+  appId: "1:831436778217:web:eaa8c7c69a9d8caa729e78"
 };
-// BANCO DE DADOS AQUI - guarda na gaveta
-let banco=JSON.parse(localStorage.getItem('zenilda')||'[]');
-banco.push(dados);
-localStorage.setItem('zenilda',JSON.stringify(banco));
-mostrarBanco();
-let m=`Olá Zenilda! Cliente ${dados.nome} quer ${dados.servico} - ${dados.total} Dia:${dados.data} Hora:${dados.hora}`;
-window.open('https://wa.me/5549999999999?text='+encodeURIComponent(m));
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.salvar = function(){
+  const nome = document.getElementById('nome').value;
+  const servico = document.getElementById('servico').value;
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
+  if(!nome || !data || !hora){ alert('Preencha tudo!'); return; }
+  push(ref(db, 'agendamentos'), { nome, servico, data, hora, criado: new Date().toLocaleString() });
+  document.getElementById('msg').innerText = '✅ Salvo na nuvem!';
+  document.getElementById('nome').value='';
 }
 
-function mostrarBanco(){
-let banco=JSON.parse(localStorage.getItem('zenilda')||'[]');
-let lista=document.getElementById('lista');
-if(banco.length==0){lista.innerHTML='Nenhum agendamento ainda';return;}
-lista.innerHTML='';
-banco.forEach((b,i)=>{
-lista.innerHTML+=`<div class="item"><b>${b.nome}</b> - ${b.servico} - ${b.data} ${b.hora} - ${b.total}</div>`;
+onValue(ref(db, 'agendamentos'), (snapshot)=>{
+  const lista = document.getElementById('lista');
+  lista.innerHTML='';
+  const dados = snapshot.val();
+  if(!dados){ lista.innerHTML='Nenhum ainda'; return; }
+  Object.values(dados).reverse().forEach(a=>{
+    lista.innerHTML+=`<div class="item"><span><b>${a.nome}</b><br>${a.servico} - ${a.data} ${a.hora}</span><span>✅</span></div>`;
+  });
 });
-}
-
-function limparBanco(){if(confirm('Apagar tudo?')){localStorage.removeItem('zenilda');mostrarBanco();}}
-
-mostrarBanco();
 </script>
 </body>
 </html>
