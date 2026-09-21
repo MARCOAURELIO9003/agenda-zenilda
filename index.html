@@ -1,32 +1,80 @@
 
+html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agenda Zenilda</title>
+<title>Agenda Zenilda - com Banco</title>
 <style>
 body{background:#fff0f5;font-family:Arial;text-align:center;padding:15px}
-.foto{width:300px;display:block;margin:20px auto;background:white;border-radius:20px}
-h1{color:#ff1493;font-size:45px;font-weight:bold}
-label{font-size:30px;display:block;margin:20px;font-weight:bold}
-.total{font-size:38px;color:#d81b60;font-weight:bold;margin:25px;background:white;padding:15px;border-radius:15px}
+.foto{width:280px;display:block;margin:15px auto;background:white;border-radius:20px;padding:10px}
+h1{color:#ff1493;font-size:50px;margin:10px}
+label{font-size:32px;display:block;margin:25px;font-weight:bold;background:white;padding:15px;border-radius:15px}
+input[type="checkbox"]{transform:scale(2.5);margin-right:20px}
+.total{font-size:40px;color:#d81b60;font-weight:bold;margin:25px;background:white;padding:20px;border-radius:15px}
 input,select{font-size:26px;padding:18px;border-radius:15px;border:3px solid #ffb6c1;width:90%;max-width:400px;margin:12px auto;display:block}
-button{background:#20b2aa;color:white;font-size:28px;padding:22px 40px;border:none;border-radius:40px;margin-top:25px;font-weight:bold}
+button{background:#20b2aa;color:white;font-size:28px;padding:20px 35px;border:none;border-radius:40px;margin:10px;font-weight:bold}
+.banco{background:white;margin-top:30px;padding:20px;border-radius:15px;text-align:left}
+.banco h2{color:#ff1493;font-size:32px;text-align:center}
+.item{border-bottom:2px solid #ffc0cb;padding:12px;font-size:22px}
 </style>
 </head>
 <body>
 <img class="foto" src="75-751115_gorgeus-clipart-womens-hair-imagens-cabeleireiro-png.png">
 <h1>Agenda Zenilda</h1>
+
 <label><input type="checkbox" id="corte" onchange="calc()"> Corte R$80</label>
 <label><input type="checkbox" id="prog" onchange="calc()"> Progressiva R$180</label>
 <div class="total" id="total">Total: R$ 0</div>
+
+<input type="text" id="nome" placeholder="Nome da cliente">
 <input type="date" id="data">
-<select id="hora"><option>Escolha horário</option><option>08:00</option><option>09:00</option><option>10:00</option><option>14:00</option><option>15:00</option></select>
-<button onclick="zap()">Agendar no WhatsApp</button>
+<select id="hora"><option>Escolha horário</option><option>08:00</option><option>09:00</option><option>10:00</option><option>14:00</option><option>15:00</option><option>16:00</option></select>
+
+<button onclick="salvar()">Salvar no Banco e WhatsApp</button>
+
+<div class="banco">
+<h2>📒 Banco - Agendamentos Salvos</h2>
+<div id="lista">Nenhum agendamento ainda</div>
+<button onclick="limparBanco()" style="background:#ff4444">Apagar tudo do banco</button>
+</div>
+
 <script>
-function calc(){let t=0;if(document.getElementById('corte').checked)t+=80;if(document.getElementById('prog').checked)t+=180;document.getElementById('total').innerText='Total: R$ '+t;}
-function zap(){let s='';if(document.getElementById('corte').checked)s+=' Corte';if(document.getElementById('prog').checked)s+=' Progressiva';let m=`Olá Zenilda! Quero agendar:${s} - ${document.getElementById('total').innerText} Dia:${document.getElementById('data').value} Hora:${document.getElementById('hora').value}`;window.open('https://wa.me/5549999999999?text='+encodeURIComponent(m));}
+function calc(){let t=0;if(corte.checked)t+=80;if(prog.checked)t+=180;total.innerText='Total: R$ '+t;return t;}
+
+function salvar(){
+let nome=document.getElementById('nome').value;
+if(!nome){alert('Escreve o nome da cliente!');return;}
+let dados={
+nome:nome,
+servico:(corte.checked?' Corte ':'')+(prog.checked?' Progressiva':''),
+total:document.getElementById('total').innerText,
+data:document.getElementById('data').value,
+hora:document.getElementById('hora').value
+};
+// BANCO DE DADOS AQUI - guarda na gaveta
+let banco=JSON.parse(localStorage.getItem('zenilda')||'[]');
+banco.push(dados);
+localStorage.setItem('zenilda',JSON.stringify(banco));
+mostrarBanco();
+let m=`Olá Zenilda! Cliente ${dados.nome} quer ${dados.servico} - ${dados.total} Dia:${dados.data} Hora:${dados.hora}`;
+window.open('https://wa.me/5549999999999?text='+encodeURIComponent(m));
+}
+
+function mostrarBanco(){
+let banco=JSON.parse(localStorage.getItem('zenilda')||'[]');
+let lista=document.getElementById('lista');
+if(banco.length==0){lista.innerHTML='Nenhum agendamento ainda';return;}
+lista.innerHTML='';
+banco.forEach((b,i)=>{
+lista.innerHTML+=`<div class="item"><b>${b.nome}</b> - ${b.servico} - ${b.data} ${b.hora} - ${b.total}</div>`;
+});
+}
+
+function limparBanco(){if(confirm('Apagar tudo?')){localStorage.removeItem('zenilda');mostrarBanco();}}
+
+mostrarBanco();
 </script>
 </body>
 </html>
