@@ -1,17 +1,35 @@
-<!-- admin.html - SÓ ZENILDA -->
-<script>let senha=prompt("Senha da Zenilda:"); if(senha!=="zenilda123"){document.body.innerHTML="Acesso negado"; throw "";}</script>
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Agenda Zenilda - ADM</title>
-<style>body{font-family:Arial;padding:20px} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ddd;padding:10px} th{background:#e75480;color:white}</style>
-</head><body><h2>Agenda Completa - Zenilda</h2><table id="tabela"><tr><th>Data</th><th>Hora</th><th>Nome</th><th>Whats</th></tr></table>
+<html>
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendar com Zenilda</title>
+<style>body{font-family:Arial;background:#fff0f5;padding:20px;text-align:center}.card{background:white;padding:20px;border-radius:15px;max-width:400px;margin:auto;box-shadow:0 5px 15px rgba(0,0,0,.1)}input,select,button{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ddd}button{background:#e75480;color:white;border:none;font-weight:bold;cursor:pointer}</style>
+</head>
+<body>
+<div class="card">
+<h2 style="color:#e75480">Zenilda Cabeleireira</h2>
+<p>Agende seu horário</p>
+<input id="nome" placeholder="Seu nome">
+<input id="tel" placeholder="WhatsApp">
+<input type="date" id="data">
+<select id="hora"><option>08:00</option><option>09:00</option><option>10:00</option><option>11:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option></select>
+<button onclick="agendar()">Confirmar</button>
+<p id="msg"></p>
+</div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-const firebaseConfig = { apiKey: "AIzaSy...", authDomain: "agenda-zenilda.firebaseapp.com", projectId: "agenda-zenilda", storageBucket: "agenda-zenilda.appspot.com", messagingSenderId: "...", appId: "..." };
-const app = initializeApp(firebaseConfig); const db = getFirestore(app);
-const snap = await getDocs(collection(db, "agendamentos"));
-snap.forEach(d=>{let a=d.data(); document.getElementById('tabela').innerHTML+=`<tr><td>${a.data}</td><td>${a.hora}</td><td>${a.nome}</td><td>${a.tel}</td></tr>`});
-</script></body></html>
-
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+const firebaseConfig = { databaseURL: "https://agenda-zenilda-default-rtdb.firebaseio.com" };
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+window.agendar = () => {
+  const nome=document.getElementById('nome').value, tel=document.getElementById('tel').value, data=document.getElementById('data').value, hora=document.getElementById('hora').value;
+  if(!nome||!data) return alert('Preencha nome e data');
+  push(ref(db, 'agendamentos'), {nome, tel, data, hora});
+  document.getElementById('msg').innerText="✅ Agendado! Zenilda vai te confirmar";
+}
+</script>
+</body>
+</html>
                
     
