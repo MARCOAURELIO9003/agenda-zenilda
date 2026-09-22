@@ -1,83 +1,17 @@
-
-html
+<!-- admin.html - SÓ ZENILDA -->
+<script>let senha=prompt("Senha da Zenilda:"); if(senha!=="zenilda123"){document.body.innerHTML="Acesso negado"; throw "";}</script>
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zenilda - Cabeleireira</title>
-<style>
-body{font-family:Arial;background:#fff0f5;margin:0;padding:20px}
-h1{color:#d63384;text-align:center}
-.card{background:white;padding:15px;border-radius:15px;box-shadow:0 2px 10px #ccc;max-width:400px;margin:20px auto}
-input,select{width:100%;padding:10px;margin:5px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
-button{background:#d63384;color:white;border:none;padding:12px;width:100%;border-radius:8px;font-size:16px;cursor:pointer;margin-top:10px}
-button:hover{background:#b02a6f}
-.lista{max-width:400px;margin:20px auto;background:white;padding:15px;border-radius:15px}
-.item{border-bottom:1px solid #eee;padding:10px 0;display:flex;justify-content:space-between}
-</style>
-</head>
-<body>
-<h1>💇‍♀️ Zenilda Cabeleireira</h1>
-<div class="card">
-<h3>Novo Agendamento</h3>
-<input id="nome" placeholder="Nome da cliente">
-<select id="servico">
-<option>Corte - R$ 30</option>
-<option>Escova - R$ 25</option>
-<option>Coloração - R$ 80</option>
-<option>Luzes - R$ 120</option>
-</select>
-<input id="data" type="date">
-<input id="hora" type="time">
-<button onclick="salvar()">Salvar no Banco na NUVEM ☁️</button>
-<p id="msg"></p>
-</div>
-<div class="lista">
-<h3>📋 Agendamentos salvos:</h3>
-<div id="lista">Carregando...</div>
-</div>
-
+<html><head><meta charset="UTF-8"><title>Agenda Zenilda - ADM</title>
+<style>body{font-family:Arial;padding:20px} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ddd;padding:10px} th{background:#e75480;color:white}</style>
+</head><body><h2>Agenda Completa - Zenilda</h2><table id="tabela"><tr><th>Data</th><th>Hora</th><th>Nome</th><th>Whats</th></tr></table>
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDMHr-t4pRCV9meCF5LvFVfqhNv7LvdSdU",
-  authDomain: "agenda-zenilda.firebaseapp.com",
-  databaseURL: "https://agenda-zenilda-default-rtdb.firebaseio.com",
-  projectId: "agenda-zenilda",
-  storageBucket: "agenda-zenilda.firebasestorage.app",
-  messagingSenderId: "831436778217",
-  appId: "1:831436778217:web:eaa8c7c69a9d8caa729e78"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.salvar = function(){
-  const nome = document.getElementById('nome').value;
-  const servico = document.getElementById('servico').value;
-  const data = document.getElementById('data').value;
-  const hora = document.getElementById('hora').value;
-  if(!nome || !data || !hora){ alert('Preencha tudo!'); return; }
-  push(ref(db, 'agendamentos'), { nome, servico, data, hora, criado: new Date().toLocaleString() });
-  document.getElementById('msg').innerText = '✅ Salvo na nuvem!';
-  document.getElementById('nome').value='';
-}
-
-onValue(ref(db, 'agendamentos'), (snapshot)=>{
-  const lista = document.getElementById('lista');
-  lista.innerHTML='';
-  const dados = snapshot.val();
-  if(!dados){ lista.innerHTML='Nenhum ainda'; return; }
-  Object.values(dados).reverse().forEach(a=>{
-    lista.innerHTML+=`<div class="item"><span><b>${a.nome}</b><br>${a.servico} - ${a.data} ${a.hora}</span><span>✅</span></div>`;
-  });
-});
-</script>
-</body>
-</html>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+const firebaseConfig = { apiKey: "AIzaSy...", authDomain: "agenda-zenilda.firebaseapp.com", projectId: "agenda-zenilda", storageBucket: "agenda-zenilda.appspot.com", messagingSenderId: "...", appId: "..." };
+const app = initializeApp(firebaseConfig); const db = getFirestore(app);
+const snap = await getDocs(collection(db, "agendamentos"));
+snap.forEach(d=>{let a=d.data(); document.getElementById('tabela').innerHTML+=`<tr><td>${a.data}</td><td>${a.hora}</td><td>${a.nome}</td><td>${a.tel}</td></tr>`});
+</script></body></html>
 
                
     
